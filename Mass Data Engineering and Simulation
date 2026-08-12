@@ -1,0 +1,60 @@
+# ==============================================================================
+# STEP 1: PARLIAMENTARY DATASET GENERATION (306 SPEECHES)
+# ==============================================================================
+import json
+import random
+
+# Real Spanish political lexicon mapped by ideological blocks
+vocabulario_gobierno = {
+    "verbos": ["defendemos", "impulsamos", "garantizamos", "avanzamos en", "protegemos a"],
+    "conceptos_positivos": ["los derechos sociales", "la mayoría social", "el progreso democrático", "el diálogo constitucional", "los servicios públicos"],
+    "ataques_oposicion": ["la crispación de la derecha", "el fango y los insultos", "el boicot sistemático de los ultras", "la máquina del fango", "la involución democrática"]
+}
+
+vocabulario_oposicion = {
+    "verbos": ["denunciamos", "exigimos", "combatimos", "frenaremos", "asistimos a"],
+    "conceptos_negativos": ["la degradación institucional", "la ruptura de la igualdad", "la colonización de los poderes", "el chantaje de los socios", "la traición al marco constitucional"],
+    "ataques_gobierno": ["este gobierno autoritario", "la deriva extremista del Ejecutivo", "la impunidad concedida por poder", "la mentira constante de la Moncloa"]
+}
+
+dataset_grande = []
+id_discurso = 1
+
+# Generate speeches balanced chronologically from 2018 to 2026
+for ano in range(2018, 2027):
+    # Artificially increase hostile language weights over time to match real trends
+    factor_polarizacion = (ano - 2018) * 0.12  
+    
+    # Generate 34 speeches per year (17 Government / 17 Opposition)
+    for _ in range(17):
+        # 1. Government Speech Generation
+        v_gob = random.choice(vocabulario_gobierno["verbos"])
+        cp_gob = random.choice(vocabulario_gobierno["conceptos_positivos"])
+        if random.random() < (0.3 + factor_polarizacion):
+            ataque = random.choice(vocabulario_gobierno["ataques_oposicion"])
+            texto_gob = f"Frente a {ataque}, desde este Ejecutivo {v_gob} firmemente {cp_gob} para todos los ciudadanos."
+        else:
+            texto_gob = f"Este es un proyecto de país donde {v_gob} {cp_gob} dentro de la legalidad."
+            
+        dataset_grande.append({
+            "id": id_discurso, "año": ano, "partido": random.choice(["PSOE", "Sumar"]), "rol": "Gobierno", "texto": texto_gob
+        })
+        id_discurso += 1
+        
+        # 2. Opposition Speech Generation
+        v_op = random.choice(vocabulario_oposicion["verbos"])
+        cn_op = random.choice(vocabulario_oposicion["conceptos_negativos"])
+        ag_op = random.choice(vocabulario_oposicion["attacks_gobierno"] if "attacks_gobierno" in vocabulario_oposicion else vocabulario_oposicion.get("ataques_gobierno"))
+        
+        texto_op = f"Desde la oposición {v_op} {cn_op} provocada por {ag_op} que fractura a los españoles."
+        
+        dataset_grande.append({
+            "id": id_discurso, "año": ano, "partido": random.choice(["PP", "VOX"]), "rol": "Oposición", "texto": texto_op
+        })
+        id_discurso += 1
+
+# Export structured data to local JSON repository
+with open('polarizacion_masiva_espana.json', 'w', encoding='utf-8') as archivo_json:
+    json.dump(dataset_grande, archivo_json, ensure_ascii=False, indent=4)
+
+print(f"[SUCCESS] Dataset 'polarizacion_masiva_espana.json' compiled with {len(dataset_grande)} records.")
