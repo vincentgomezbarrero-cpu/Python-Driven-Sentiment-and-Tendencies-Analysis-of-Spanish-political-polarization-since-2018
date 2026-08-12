@@ -1,0 +1,64 @@
+# ==============================================================================
+# STEP 3: STATISTICAL VISUALIZATION AND PREDICTIVE FORECASTING MODEL
+# ==============================================================================
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.linear_model import LinearRegression
+
+# Configure aesthetics for scientific plotting
+sns.set_theme(style="whitegrid")
+plt.rcParams['figure.figsize'] = [10, 5]
+plt.rcParams['font.size'] = 12
+
+# Copy processed dataset into current workspace
+df = df_final.copy()
+
+# Plot 1: Historical Time Series by Bloc
+print("[INFO] Computing descriptive historical aggregation...")
+ev_temporal = df.groupby(['Year', 'Political Role'])['Polarization Score (-1 to 1)'].mean().unstack()
+
+plt.figure()
+plt.plot(ev_temporal.index, ev_temporal['Government'], marker='o', linewidth=2.5, color='#1f77b4', label='Government (Center-Left / Progressive)')
+plt.plot(ev_temporal.index, ev_temporal['Opposition'], marker='s', linewidth=2.5, color='#d62728', label='Opposition (Center-Right / Far-Right)')
+plt.axhline(0, color='black', linestyle='--', alpha=0.5)
+plt.title("Spain: Political Polarization Index Evolution (2018-2026)", fontsize=14, fontweight='bold', pad=15)
+plt.xlabel("Year", fontsize=12)
+plt.ylabel("Polarization Score\n(+1 = Constructive / -1 = Hostile)", fontsize=12)
+plt.ylim(-1.0, 0.5)
+plt.legend(loc='lower left', frameon=True)
+plt.tight_layout()
+plt.savefig('historical_polarization_trend.png', dpi=300)
+plt.show()
+
+# Plot 2: Predictive Linear OLS Regression Modeling
+print("[INFO] Training OLS Linear Regression engine...")
+df_pred = df.groupby('Year')['Polarization Score (-1 to 1)'].mean().reset_index()
+X = df_pred[['Year']].values  
+y = df_pred['Polarization Score (-1 to 1)'].values  
+
+# Fit predictive machine learning estimator
+modelo = LinearRegression()
+modelo.fit(X, y)
+
+# Project trend line over future horizons
+anos_futuros = np.array([[2027], [2028]])
+predicciones = modelo.predict(anos_futuros)
+anos_totales = np.append(X.flatten(), anos_futuros.flatten())
+valores_totales = np.append(y, predicciones)
+
+plt.figure()
+plt.plot(X.flatten(), y, marker='o', linewidth=2, color='#2ca02c', label='Historical Data (2018-2026)')
+plt.plot(anos_totales[-3:], valores_totales[-3:], marker='x', linestyle='--', linewidth=2.5, color='#ff7f0e', label='AI Predictive Forecast (2027-2028)')
+plt.axhline(0, color='black', linestyle='--', alpha=0.3)
+plt.title("AI Predictive Model: Forecasting Spain's Political Polarization", fontsize=14, fontweight='bold', pad=15)
+plt.xlabel("Year", fontsize=12)
+plt.ylabel("Polarization Score", fontsize=12)
+plt.ylim(-1.0, 0.2)
+plt.legend(loc='lower left')
+plt.tight_layout()
+plt.savefig('polarization_ai_forecast.png', dpi=300)
+plt.show()
+
+print("[SUCCESS] All analytic plots generated and saved as high-resolution PNG assets.")
