@@ -129,10 +129,10 @@ processed_data = []for d in json_data:
 df_final.to_excel(excel_name, index=False)
 print(f"[SUCCESS] International spreadsheet saved as: '{excel_name}'")
 
-## Step 3: Statistical Aggregation, Visualization, and Predictive Machine Learning
+# Step 3: Statistical Aggregation, Visualization, and Predictive Machine Learning
 This script groups data points into time series, trains a Scikit-Learn Linear Regression model to calculate long-term trajectory slopes, and exports publication-ready statistical plots.
 
-# ==============================================================================# STEP 3: STATISTICAL VISUALIZATION AND PREDICTIVE FORECASTING MODEL# ==============================================================================import numpy as npimport pandas as pdimport matplotlib.pyplot as pltimport seaborn as snsfrom sklearn.linear_model import LinearRegression
+# STEP 3: STATISTICAL VISUALIZATION AND PREDICTIVE FORECASTING MODEL
 # Configure aesthetics for scientific plotting
 sns.set_theme(style="whitegrid")
 plt.rcParams['figure.figsize'] = [10, 5]
