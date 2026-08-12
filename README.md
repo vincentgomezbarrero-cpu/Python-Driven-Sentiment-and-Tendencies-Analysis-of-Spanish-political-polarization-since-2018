@@ -15,13 +15,13 @@ An ordinary least squares (OLS) Linear Regression model was trained to forecast 
 Because polarization yields high electoral returns, politicians on both sides are mathematically projected to continue intensifying verbal conflict.
 
 ------------------------------
-## 🛠️ Step-by-Step Implementation & Final Scripts
+## Step-by-Step Implementation & Final Scripts
 To reproduce this project in Google Colab, execute the following two production-ready scripts in sequential order.
 ## Step 1: Mass Data Engineering & Local Simulation
 This script acts as the structural foundation of the data pipeline. It bypasses external network blocks by algorithmically generating a balanced dataset of 306 unstructured text records spanning 2018 to 2026, categorized by Year, Political Party, and Institutional Role.
 
-# ==============================================================================# STEP 1: PARLIAMENTARY DATASET GENERATION (306 SPEECHES)# ==============================================================================import jsonimport random
-# Real Spanish political lexicon mapped by ideological blocksvocabulario_gobierno = {
+STEP 1: PARLIAMENTARY DATASET GENERATION 
+
     "verbos": ["defendemos", "impulsamos", "garantizamos", "avanzamos en", "protegemos a"],
     "conceptos_positivos": ["los derechos sociales", "la mayoría social", "el progreso democrático", "el diálogo constitucional", "los servicios públicos"],
     "ataques_oposicion": ["la crispación de la derecha", "el fango y los insultos", "el boicot sistemático de los ultras", "la máquina del fango", "la involución democrática"]
@@ -71,7 +71,6 @@ print(f"[SUCCESS] Dataset 'polarizacion_masiva_espana.json' compiled with {len(d
 ## Step 2: NLP Processing, International Metric Calculations & Bilingual Export
 This script installs linguistic dependencies, downloads the required text-tokenization tables, cleans Spanish stop-words, and stems words to their base morphological roots. It evaluates a custom sentiment lexicon to score text fragments on an international numerical scale (-1.0 to +1.0), maps local parties to international political ideologies, and exports the data to a standardized English Excel sheet.
 
-# ==============================================================================# STEP 2: TRANSLATION, TEXT MINING, SCORING & BILINGUAL EXCEL EXPORT# ==============================================================================
 !pip install -q pandas openpyxl nltk
 import jsonimport pandas as pdimport nltkfrom nltk.corpus import stopwordsfrom nltk.stem import SnowballStemmer
 # Download updated mandatory tokenization tables and language packages
